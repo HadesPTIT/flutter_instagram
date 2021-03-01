@@ -3,12 +3,16 @@ import 'package:flutter_new_instagram/app/pages/camera/camera_screen.dart';
 import 'package:flutter_new_instagram/app/pages/container/home_container_screen.dart';
 import 'package:flutter_new_instagram/app/pages/message/message_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  @override
-  _MainScreenState createState() => _MainScreenState();
-}
+// ignore: must_be_immutable
+class MainScreen extends StatelessWidget {
+  static const String routeName = '/main';
 
-class _MainScreenState extends State<MainScreen> {
+  static Route route() {
+    return MaterialPageRoute(
+        settings: const RouteSettings(name: routeName),
+        builder: (_) => MainScreen());
+  }
+
   PageController _pageController = PageController(initialPage: 1);
   int currentIndex = 1;
 

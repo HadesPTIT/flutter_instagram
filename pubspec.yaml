@@ -37,7 +37,21 @@ dependencies:
   path: ^1.6.4
 
   equatable: ^1.2.5
+
+  # flutter Widgets that make it easy to implement the BLoC
   flutter_bloc: ^6.1.1
+  # state management library that helps implement the BLoC
+  bloc: ^6.1.1
+
+  # Firebase
+  cloud_firestore: ^0.14.4
+  firebase_analytics: ^6.3.0
+  firebase_auth: ^0.18.4+1
+  firebase_core: ^0.5.3
+  firebase_storage: ^5.2.0
+
+  enum_to_string: ^1.0.14
+  meta: ^1.2.4
 
   liquid_pull_to_refresh: ^2.0.0
   cached_network_image: ^2.0.0-rc.1
