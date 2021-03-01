@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_new_instagram/app/dummy/dummy.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/feed_widget.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/home_appbar_widget.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/home_story_item_widget.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/self_story_item_widget.dart';
+import 'package:flutter_new_instagram/app/pages/story/story_screen.dart';
+import 'package:get/get.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -52,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView.separated(
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
+            itemCount: stories.length + 1,
             itemBuilder: (context, index) {
               return Container(
                   child: Padding(
@@ -60,7 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           horizontal: 4.0, vertical: 8.0),
                       child: index == 0
                           ? SelfStoryItemWidget(size: itemWidth)
-                          : HomeStoryItemWidget(size: itemWidth)));
+                          : HomeStoryItemWidget(
+                              onItemPress: () =>
+                                  Get.to(StoryScreen(stories: stories)),
+                              size: itemWidth,
+                              story: stories[index - 1])));
             },
             separatorBuilder: (context, index) => SizedBox(width: 1.0),
           ),
