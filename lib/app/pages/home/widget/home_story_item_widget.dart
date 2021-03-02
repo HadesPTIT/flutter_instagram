@@ -1,16 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_new_instagram/app/models/story_model.dart';
 
 class HomeStoryItemWidget extends StatelessWidget {
   final VoidCallback onItemPress;
   final double size;
+  final Story story;
 
-  const HomeStoryItemWidget({this.onItemPress, this.size});
+  const HomeStoryItemWidget({this.onItemPress, this.size, this.story});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onItemPress,
+      onTap: () => onItemPress.call(),
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Column(
@@ -34,12 +36,13 @@ class HomeStoryItemWidget extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(size / 2.0),
                     child: Container(
+                      color: Colors.green,
                         child: CachedNetworkImage(
-                          placeholder: (context, url) => Container(
-                            decoration: ShapeDecoration(
-                                color: Colors.white, shape: CircleBorder()),
-                          ),
-                      imageUrl: 'https://i.ibb.co/TbP0qWJ/iuiuiuiuiu.jpg',
+                      placeholder: (context, url) => Container(
+                        decoration: ShapeDecoration(
+                            color: Colors.white, shape: CircleBorder()),
+                      ),
+                      imageUrl: story.user.avatarUrl,
                       fit: BoxFit.fill,
                     ))),
               ),
@@ -52,7 +55,7 @@ class HomeStoryItemWidget extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
               child: Text(
-                'Hades',
+                story.user.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.black, fontSize: 10.0),

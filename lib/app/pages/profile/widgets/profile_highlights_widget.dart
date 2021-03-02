@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_new_instagram/app/dummy/dummy.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/home_story_item_widget.dart';
 
 class ProfileHighlightsWidget extends StatelessWidget {
@@ -18,7 +19,10 @@ class ProfileHighlightsWidget extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 4.0, vertical: 8.0),
-                  child: HomeStoryItemWidget(size: itemWidth)));
+                  child: HomeStoryItemWidget(
+                      onItemPress: () => {},
+                      story: stories[index%6],
+                      size: itemWidth)));
         },
         separatorBuilder: (context, index) => SizedBox(width: 1.0),
       ),
