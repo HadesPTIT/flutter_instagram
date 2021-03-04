@@ -9,6 +9,7 @@ import 'package:flutter_new_instagram/app/blocs/insta_cubit_observer.dart';
 import 'package:flutter_new_instagram/app/config/insta_router.dart';
 import 'package:flutter_new_instagram/app/pages/splash/splash_screen.dart';
 import 'package:flutter_new_instagram/app/repositories/auth/auth_repository.dart';
+import 'package:flutter_new_instagram/app/repositories/post/post_repository.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -31,7 +32,9 @@ class _InstaApplicationState extends State<InstaApplication> {
     return MultiRepositoryProvider(
         providers: [
           RepositoryProvider<AuthRepository>(
-              create: (context) => AuthRepositoryImpl())
+              create: (context) => AuthRepositoryImpl()),
+          RepositoryProvider<PostRepository>(
+              create: (context) => PostRepositoryImpl())
         ],
         child: MultiBlocProvider(
           providers: [

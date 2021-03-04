@@ -75,37 +75,37 @@ List<Widget> locationListSuggest() {
 
 final List<User> users = [
   User(
-      id: 1,
+      id: '1',
       name: 'Davis',
       avatarUrl:
           'https://i.ibb.co/Sy7QVJT/Screen-Shot-2021-03-02-at-16-23-50.png'),
   User(
-      id: 2,
+      id: '2',
       name: 'Sophie',
       avatarUrl:
           'https://i.ibb.co/wgNCCFV/Screen-Shot-2021-03-02-at-16-25-00.png'),
   User(
-      id: 3,
+      id: '3',
       name: 'Hannah',
       avatarUrl:
           'https://i.ibb.co/LCMFqv9/Screen-Shot-2021-03-02-at-16-24-40.png'),
   User(
-      id: 4,
+      id: '4',
       name: 'Hook',
       avatarUrl:
           'https://i.ibb.co/pR3NpJq/Screen-Shot-2021-03-02-at-16-23-59.png'),
   User(
-      id: 5,
+      id: '5',
       name: 'Lucy',
       avatarUrl:
           'https://i.ibb.co/frBq8nn/Screen-Shot-2021-03-02-at-16-24-25.png'),
   User(
-      id: 6,
+      id: '6',
       name: 'Cristina',
       avatarUrl:
           'https://i.ibb.co/pxfYF76/Screen-Shot-2021-03-02-at-16-24-31.png'),
   User(
-      id: 7,
+      id: '7',
       name: 'Sooobela',
       avatarUrl:
           'https://i.ibb.co/pxfYF76/Screen-Shot-2021-03-02-at-16-24-31.png')
