@@ -1,11 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_new_instagram/app/blocs/feed/feed_bloc.dart';
+import 'package:flutter_new_instagram/app/models/post_model.dart';
 import 'package:flutter_new_instagram/app/pages/comment/comments_screen.dart';
+import 'package:flutter_new_instagram/app/utils/string_utils.dart';
 import 'package:flutter_new_instagram/gen_assets/assets.gen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class FeedWidget extends StatefulWidget {
+  final Post post;
+  final bool isLiked;
+  final VoidCallback onLike;
+
+  const FeedWidget({this.post, this.isLiked, this.onLike});
+
   @override
   _FeedWidgetState createState() => _FeedWidgetState();
 }
@@ -30,11 +39,16 @@ class _FeedWidgetState extends State<FeedWidget> {
       child: Row(
         children: [
           InkResponse(
-            onTap: () {},
+            onTap: () {
+              widget.onLike.call();
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: SvgPicture.asset(Assets.images.icHeartOutline,
-                  width: 22, height: 22, color: Colors.black),
+              child: widget.isLiked
+                  ? SvgPicture.asset(Assets.images.icHeartOutline,
+                      width: 22, height: 22, color: Colors.black)
+                  : SvgPicture.asset(Assets.images.icHeartFilled,
+                      width: 22, height: 22, color: Colors.black),
             ),
           ),
           InkResponse(
@@ -74,7 +88,8 @@ class _FeedWidgetState extends State<FeedWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '666,888 likes',
+            StringUtils.numberFormatter(
+                value: widget.post.numOfLikes, suffix: 'likes'),
             textAlign: TextAlign.start,
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
@@ -82,13 +97,12 @@ class _FeedWidgetState extends State<FeedWidget> {
           RichText(
             text: TextSpan(children: [
               TextSpan(
-                  text: 'Hades',
+                  text: widget.post.author.name,
                   style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold)),
               TextSpan(text: ' '),
               TextSpan(
-                  text:
-                      'The Maldives 🏝 are an archipelago of 1,192 islands grouped into 26 coral atolls in the Indian Ocean 🌊\n🌅🌅🌅',
+                  text: widget.post.caption,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
@@ -98,7 +112,7 @@ class _FeedWidgetState extends State<FeedWidget> {
           InkWell(
             child: Container(
               child: Text(
-                'View all 238 comments',
+                'View all ${widget.post.numOfComments} comments',
                 style: Theme.of(context)
                     .textTheme
                     .caption
@@ -111,7 +125,7 @@ class _FeedWidgetState extends State<FeedWidget> {
             },
           ),
           Text(
-            '7 days ago',
+            StringUtils.timeAgoSinceDate(widget.post.dateTime),
             style: Theme.of(context).textTheme.caption.copyWith(fontSize: 10),
           ),
         ],
@@ -124,7 +138,7 @@ class _FeedWidgetState extends State<FeedWidget> {
       child: AspectRatio(
         aspectRatio: 16 / 10,
         child: CachedNetworkImage(
-          imageUrl: 'https://wallpapercave.com/uwp/uwp556880.jpeg',
+          imageUrl: widget.post.imageUrl,
           fit: BoxFit.fill,
         ),
       ),
@@ -139,8 +153,7 @@ class _FeedWidgetState extends State<FeedWidget> {
         children: [
           CircleAvatar(
               radius: 16,
-              backgroundImage:
-                  NetworkImage('https://i.ibb.co/3dhG6cS/kim-joo-jung.jpg')),
+              backgroundImage: NetworkImage(widget.post.author.avatarUrl)),
           Expanded(
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -150,7 +163,7 @@ class _FeedWidgetState extends State<FeedWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Hades',
+                    Text(widget.post.author.name,
                         style: TextStyle(
                             color: Colors.black87,
                             fontWeight: FontWeight.w600,
@@ -167,7 +180,7 @@ class _FeedWidgetState extends State<FeedWidget> {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  'San Antonio, Texas',
+                  widget.post.location,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 10.0,

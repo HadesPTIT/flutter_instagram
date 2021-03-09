@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_new_instagram/app/blocs/auth/auth_bloc.dart';
+import 'package:flutter_new_instagram/app/blocs/feed/feed_bloc.dart';
 import 'package:flutter_new_instagram/app/blocs/insta_cubit_observer.dart';
 import 'package:flutter_new_instagram/app/config/insta_router.dart';
 import 'package:flutter_new_instagram/app/pages/splash/splash_screen.dart';

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_new_instagram/app/config/firestore_collection_path.dart';
 import 'package:flutter_new_instagram/app/models/user_model.dart';
 
 class Post extends Equatable {
   final String id;
-  final String avatarUrl;
+  final String imageUrl;
   final String caption;
   final String location;
   final int numOfLikes;
@@ -15,7 +16,7 @@ class Post extends Equatable {
 
   const Post({
     @required this.id,
-    @required this.avatarUrl,
+    @required this.imageUrl,
     @required this.caption,
     @required this.location,
     @required this.numOfLikes,
@@ -26,7 +27,7 @@ class Post extends Equatable {
 
   Post copyWith({
     String id,
-    String avatarUrl,
+    String imageUrl,
     String caption,
     String location,
     int numOfLikes,
@@ -36,7 +37,7 @@ class Post extends Equatable {
   }) {
     return Post(
       id: id ?? this.id,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
       caption: caption ?? this.caption,
       location: location ?? this.location,
       numOfLikes: numOfLikes ?? this.numOfLikes,
@@ -49,7 +50,7 @@ class Post extends Equatable {
   factory Post.empty() {
     return Post(
         id: '',
-        avatarUrl: '',
+        imageUrl: '',
         caption: '',
         location: '',
         numOfLikes: 0,
@@ -64,7 +65,7 @@ class Post extends Equatable {
   @override
   List<Object> get props => [
         id,
-        avatarUrl,
+        imageUrl,
         caption,
         location,
         numOfLikes,
@@ -72,33 +73,6 @@ class Post extends Equatable {
         author,
         dateTime
       ];
-
-  factory Post.fromMap(Map<String, dynamic> map) {
-    return Post(
-      id: map['id'] as String,
-      avatarUrl: map['avatarUrl'] as String,
-      caption: map['caption'] as String,
-      location: map['location'] as String,
-      numOfLikes: map['numOfLikes'] as int,
-      numOfComments: map['numOfComments'] as int,
-      author: map['author'] as User,
-      dateTime: map['dateTime'] as DateTime,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
-    return {
-      'id': this.id,
-      'avatarUrl': this.avatarUrl,
-      'caption': this.caption,
-      'location': this.location,
-      'numOfLikes': this.numOfLikes,
-      'numOfComments': this.numOfComments,
-      'author': this.author,
-      'dateTime': this.dateTime,
-    } as Map<String, dynamic>;
-  }
 
   static Future<Post> fromDocument(DocumentSnapshot doc) async {
     if (doc == null) return null;
@@ -110,7 +84,7 @@ class Post extends Equatable {
         return Post(
           id: doc.id,
           author: User.fromDocument(authorDoc),
-          avatarUrl: data['avatarUrl'] ?? '',
+          imageUrl: data['imageUrl'] ?? '',
           caption: data['caption'] ?? '',
           location: data['location'],
           numOfLikes: (data['numOfLikes'] ?? 0),
@@ -120,5 +94,19 @@ class Post extends Equatable {
       }
     }
     return null;
+  }
+
+  Map<String, dynamic> toDocument() {
+    return {
+      'author': FirebaseFirestore.instance
+          .collection(FireStoreCollectionPath.users)
+          .doc(author.id),
+      'imageUrl': imageUrl,
+      'caption': caption,
+      'location': location,
+      'numOfLikes': numOfLikes,
+      'numOfComments': numOfComments,
+      'dateTime': Timestamp.fromDate(dateTime),
+    };
   }
 }

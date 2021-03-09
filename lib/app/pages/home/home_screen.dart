@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_new_instagram/app/blocs/feed/feed_bloc.dart';
+import 'package:flutter_new_instagram/app/blocs/feed/feed_state.dart';
 import 'package:flutter_new_instagram/app/dummy/dummy.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/feed_widget.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/home_appbar_widget.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/home_story_item_widget.dart';
+import 'package:flutter_new_instagram/app/pages/home/widget/newsfeed_skeleton_list_tile_widget.dart';
+import 'package:flutter_new_instagram/app/pages/home/widget/newsfeed_skeleton_widget.dart';
 import 'package:flutter_new_instagram/app/pages/home/widget/self_story_item_widget.dart';
 import 'package:flutter_new_instagram/app/pages/story/story_screen.dart';
+import 'package:flutter_new_instagram/app/repositories/auth/auth_repository.dart';
+import 'package:flutter_new_instagram/app/repositories/post/post_repository.dart';
 import 'package:get/get.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'dart:developer' as developer;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,34 +22,89 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _scrollController = ScrollController();
+
+  final FeedCubit _cubit = FeedCubit(
+      authRepository: AuthRepositoryImpl(),
+      postRepository: PostRepositoryImpl());
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      _onScroll();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    _cubit..close();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: HomeAppBarWidget(),
-        body: LiquidPullToRefresh(
-          onRefresh: () async {
-            await Future.delayed(Duration(seconds: 1));
-          },
-          color: Colors.white,
-          height: 60,
-          borderWidth: 2,
-          backgroundColor: Colors.orange,
-          springAnimationDurationInMilliseconds: 200,
-          showChildOpacityTransition: false,
-          child: Container(
-            color: Colors.white,
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return index == 0 ? _buildInstaStories() : FeedWidget();
-              },
-            ),
-          ),
-        ),
+      child: BlocConsumer<FeedCubit, FeedState>(
+        cubit: _cubit..run(),
+        listener: (context, state) {
+          if (state is FeedLoadedState) {}
+        },
+        builder: (context, state) {
+          return Scaffold(
+            appBar: HomeAppBarWidget(),
+            body: LiquidPullToRefresh(
+                onRefresh: () async {
+                  await Future.delayed(Duration(seconds: 1));
+                },
+                color: Colors.white,
+                height: 60,
+                borderWidth: 2,
+                backgroundColor: Colors.orange,
+                springAnimationDurationInMilliseconds: 200,
+                showChildOpacityTransition: false,
+                child: _buildNewFeeds(state)),
+          );
+        },
       ),
     );
+  }
+
+  Widget _buildNewFeeds(FeedState state) {
+    if (state is FeedLoadingState) {
+      return NewsFeedSkeletonListTileWidget();
+    }
+    if (state is FeedLoadedState) {
+      return Container(
+        color: Colors.white,
+        child: ListView.builder(
+          controller: _scrollController,
+          physics: BouncingScrollPhysics(),
+          itemCount: state.viewModel.posts.length + 1,
+          itemBuilder: (context, index) {
+            if (!state.viewModel.hasReachMax &&
+                index == state.viewModel.posts.length) {
+              return Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(bottom: 10),
+                child: CircularProgressIndicator(),
+              );
+            }
+            return index == 0
+                ? _buildInstaStories()
+                : FeedWidget(
+                    post: state.viewModel.posts[index - 1],
+                    isLiked: true,
+                    onLike: () {
+                      // Todo :
+                    },
+                  );
+          },
+        ),
+      );
+    }
+    return SizedBox();
   }
 
   Widget _buildInstaStories() {
@@ -79,5 +142,14 @@ class _HomeScreenState extends State<HomeScreen> {
         )
       ],
     );
+  }
+
+  void _onScroll() {
+    var isScrollEdgeBottom = _scrollController.position.atEdge &&
+        _scrollController.position.pixels != 0;
+    if (isScrollEdgeBottom && !_cubit.state.viewModel.hasReachMax) {
+      developer.log(">>>>> LOAD MORE");
+      _cubit.loadMore();
+    }
   }
 }
