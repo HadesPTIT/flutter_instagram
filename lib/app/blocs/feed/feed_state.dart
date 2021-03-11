@@ -1,38 +1,43 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_new_instagram/app/blocs/feed/feed_view_model.dart';
-import 'package:flutter_new_instagram/app/models/post_model.dart';
+part of 'feed_bloc.dart';
 
-abstract class FeedState extends Equatable {
-  final FeedViewModel viewModel;
+enum NewsFeedStatus { initial, loading, loaded, end, error }
 
-  const FeedState(this.viewModel);
-}
+class NewsFeedState extends Equatable {
+  final List<Post> posts;
+  final NewsFeedStatus status;
+  final dynamic error;
 
-class FeedInitialState extends FeedState {
-  const FeedInitialState() : super(null);
+  const NewsFeedState({
+    @required this.posts,
+    @required this.status,
+    @required this.error,
+  });
+
+  factory NewsFeedState.initial() {
+    return const NewsFeedState(
+      posts: [],
+      status: NewsFeedStatus.initial,
+      error: null,
+    );
+  }
+
+  bool get hasReachMax => status == NewsFeedStatus.end;
+
+  NewsFeedState copyWith({
+    List<Post> posts,
+    NewsFeedStatus status,
+    dynamic error,
+  }) {
+    return new NewsFeedState(
+      posts: posts ?? this.posts,
+      status: status ?? this.status,
+      error: error ?? this.error,
+    );
+  }
 
   @override
-  List<Object> get props => [];
-}
-
-class FeedLoadingState extends FeedState {
-  const FeedLoadingState(viewModel) : super(viewModel);
+  List<Object> get props => [posts, status, error];
 
   @override
-  List<Object> get props => [viewModel];
-}
-
-class FeedErrorState extends FeedState {
-  const FeedErrorState(viewModel) : super(viewModel);
-
-  @override
-  List<Object> get props => [viewModel];
-}
-
-class FeedLoadedState extends FeedState {
-  const FeedLoadedState(viewModel) : super(viewModel);
-
-  @override
-  List<Object> get props => [viewModel];
+  bool get stringify => true;
 }
