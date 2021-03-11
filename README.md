@@ -1,22 +1,33 @@
 # Instagram Flutter
 
-A new Flutter project 🔥🔥🔥
+Build an Instagram clone project using firebase/firestore with similar functions 🔥🔥🔥
 
-## Getting Started
+Give a ⭐⭐⭐　if you like this 🔥
 
-This project is a starting point for a Flutter application.
+## Features
+ - [x] SignIn / SignUp
+ - [x] Read NewsFeed
+ - [x] Create Posts
+ - [ ] Like/Comment/Follow
+ - [ ] Stories
+ - [ ] Explore
+ - [ ] Activities
+ - [ ] Profile
+ - [ ] Notification
+ - [ ] Direct message
+ 
+## Screenshots
 
-A few resources to get you started if this is your first Flutter project:
+| | | |
+|:----|:----|:----|
+|![](https://media.giphy.com/media/qyao80pXcqL4Oy1lO3/giphy.gif)|![](./sample/Screenshot_1614271800.png)|![](./sample/Screenshot_1614271272.png)|
+|![](./sample/Screenshot_1614271279.png)|![](./sample/Screenshot_1614271317.png)|![](./sample/Screenshot_1614271544.png)|
+|![](./sample/Screenshot_1614271565.png)|![](./sample/Screenshot_1614271598.png)|![](./sample/Screenshot_1614271609.png)|
+|![](./sample/Screenshot_1614271249.png)|![](./sample/Screenshot_1614271261.png)|![](./sample/Screenshot_1614271573.png)|
+|![](./sample/Screenshot_1614271300.png)|![](./sample/Screenshot_1614275170.png)|
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Contributing
 
-| | |
-|:----|:----|
-|![](https://media.giphy.com/media/qyao80pXcqL4Oy1lO3/giphy.gif)|![]()|
-|![](./sample/Screenshot_1614271249.png)|![](./sample/Screenshot_1614271261.png)|
-|![](./sample/Screenshot_1614271272.png)|![](./sample/Screenshot_1614271279.png)|
-|![](./sample/Screenshot_1614271300.png)|![](./sample/Screenshot_1614271317.png)|
-|![](./sample/Screenshot_1614271544.png)|![](./sample/Screenshot_1614271565.png)|
-|![](./sample/Screenshot_1614271573.png)|![](./sample/Screenshot_1614271598.png)|
-|![](./sample/Screenshot_1614271609.png)|![](./sample/Screenshot_1614275170.png)|
+Contributions, issues and feature requests are welcome!
+
+Feel free to check the [issues page](../../issues).

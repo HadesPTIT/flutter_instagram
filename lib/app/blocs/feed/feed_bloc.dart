@@ -1,14 +1,18 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_new_instagram/app/blocs/feed/feed_view_model.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_new_instagram/app/config/config.dart';
+import 'package:flutter_new_instagram/app/models/post_model.dart';
 import 'package:flutter_new_instagram/app/repositories/auth/auth_repository.dart';
 import 'package:flutter_new_instagram/app/repositories/post/post_repository.dart';
+import 'package:flutter_new_instagram/app/utils/network_state_mixin.dart';
+import 'package:bloc/bloc.dart';
+import 'dart:developer' as dev;
 
-import 'feed_state.dart';
-import 'dart:developer' as developer;
+part 'feed_state.dart';
 
-class FeedCubit extends Cubit<FeedState> {
+enum ErrorType { NETWORK, SERVER, OTHER }
+
+class FeedCubit extends Cubit<NewsFeedState> with NetworkStateMixin {
   final PostRepository _postRepository;
   final AuthRepository _authRepository;
 
@@ -17,51 +21,37 @@ class FeedCubit extends Cubit<FeedState> {
     @required AuthRepository authRepository,
   })  : _postRepository = postRepository,
         _authRepository = authRepository,
-        super(FeedInitialState());
+        super(NewsFeedState.initial()) {}
 
-  Future loadMore() async {
-    developer.log("Hzzz loadMore");
-  }
-
-  Future run() async {
-    developer.log("runnnn");
-    emit(FeedLoadingState(FeedViewModel()));
+  Future run({bool loadMore = false}) async {
+    bool isConnected = await checkNetwork();
+    if (!isConnected) {
+      emit(state.copyWith(
+          status: NewsFeedStatus.error, error: ErrorType.NETWORK));
+      return;
+    }
+    if (!loadMore) {
+      emit(state.copyWith(status: NewsFeedStatus.loading));
+    }
+    return;
     await Future.delayed(Duration(seconds: 1));
 
+    final lastPostID = state.posts.isNotEmpty ? state.posts.last.id : null;
+
     final posts = await _postRepository.getNewFeeds(
-        userId: 'pxzTg0cauvO7bCeW8NUD', lastPostId: null);
+        userId: 'pxzTg0cauvO7bCeW8NUD', lastPostId: lastPostID);
 
     if (posts == null) {
-      emit(FeedErrorState(state.viewModel
-          .copyWith(error: Exception('...')))); // Todo: detect error type
+      emit(state.copyWith(
+          status: NewsFeedStatus.error, error: ErrorType.SERVER));
       return;
     }
 
     bool hasReachMax = posts.length < kPageSize;
+    final newPosts = [...state.posts]..addAll(posts);
 
-    emit(FeedLoadedState(state.viewModel.copyWith(
-        hasReachMax: hasReachMax, posts: state.viewModel.toNewPosts(posts))));
-
-    // await _postRepository.createNewPost(
-    //     post: Post(
-    //         id: '1',
-    //         avatarUrl: 'WTF',
-    //         caption: 'Hello, my name is Hades',
-    //         location: 'VN',
-    //         numOfLikes: 6868,
-    //         numOfComments: 999,
-    //         author: User(
-    //             id: 'EtIAt6jlZ5V52s6KI794rQJvcu92',
-    //             name: 'Hades',
-    //             email: 'Hphamptit@gmail.com',
-    //             avatarUrl: 'https://no.me',
-    //             bio: 'Nothing',
-    //             followers: 123,
-    //             followings: 456),
-    //         dateTime: DateTime.now()));
-
-    // Future.delayed(Duration(seconds: 1)).then((value) {
-    //   emit(FeedLoadedState(posts: []));
-    // });
+    emit(state.copyWith(
+        posts: newPosts,
+        status: hasReachMax ? NewsFeedStatus.end : NewsFeedStatus.loaded));
   }
 }

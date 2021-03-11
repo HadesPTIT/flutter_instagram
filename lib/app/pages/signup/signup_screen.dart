@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_new_instagram/app/blocs/login/login_cubit.dart';
+import 'package:flutter_new_instagram/app/blocs/signup/signup_cubit.dart';
+import 'package:flutter_new_instagram/app/pages/login/login_screen.dart';
 import 'package:flutter_new_instagram/app/pages/main_screen.dart';
-import 'package:flutter_new_instagram/app/pages/signup/signup_screen.dart';
 import 'package:flutter_new_instagram/app/repositories/repositories.dart';
 import 'package:flutter_new_instagram/app/widgets/error_dialog.dart';
 import 'package:flutter_new_instagram/gen_assets/assets.gen.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class LoginScreen extends StatelessWidget {
-  static const String routeName = '/login';
+class SignupScreen extends StatelessWidget {
+  static const String routeName = '/signup';
 
   static Route route() {
     return PageRouteBuilder(
       settings: const RouteSettings(name: routeName),
       transitionDuration: const Duration(seconds: 0),
-      pageBuilder: (context, _, __) => BlocProvider<LoginCubit>(
+      pageBuilder: (context, _, __) => BlocProvider<SignupCubit>(
         create: (_) =>
-            LoginCubit(authRepository: context.read<AuthRepository>()),
-        child: LoginScreen(),
+            SignupCubit(authRepository: context.read<AuthRepository>()),
+        child: SignupScreen(),
       ),
     );
   }
@@ -31,16 +31,16 @@ class LoginScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: BlocConsumer<LoginCubit, LoginState>(
+        child: BlocConsumer<SignupCubit, SignupState>(
           listener: (context, state) {
-            if (state.status == LoginStatus.error) {
+            if (state.status == SignupStatus.error) {
               showDialog(
                 context: context,
                 builder: (context) =>
                     ErrorDialog(content: state.failure.message),
               );
             }
-            if (state.status == LoginStatus.success) {
+            if (state.status == SignupStatus.success) {
               Navigator.of(context).pushNamed(MainScreen.routeName);
             }
           },
@@ -93,7 +93,7 @@ class LoginScreen extends StatelessWidget {
                             children: [
                               TextFormField(
                                 decoration: InputDecoration(
-                                  hintText: 'Email or username',
+                                  hintText: 'Username',
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                       borderSide:
@@ -108,13 +108,37 @@ class LoginScreen extends StatelessWidget {
                                   contentPadding: EdgeInsets.all(8),
                                 ),
                                 onChanged: (value) => context
-                                    .read<LoginCubit>()
+                                    .read<SignupCubit>()
+                                    .usernameChanged(value),
+                                validator: (value) => value.trim().isEmpty
+                                    ? 'Please enter a valid username.'
+                                    : null,
+                              ),
+                              SizedBox(height: 14.0),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Email',
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                          Divider.createBorderSide(context)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          Divider.createBorderSide(context)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          Divider.createBorderSide(context)),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.all(8),
+                                ),
+                                onChanged: (value) => context
+                                    .read<SignupCubit>()
                                     .emailChanged(value),
                                 validator: (value) => !value.contains('@')
                                     ? 'Please enter a valid email.'
                                     : null,
                               ),
-                              SizedBox(height: 14.0),
+                              SizedBox(height: 14),
                               TextFormField(
                                 decoration: InputDecoration(
                                   hintText: 'Password',
@@ -132,7 +156,7 @@ class LoginScreen extends StatelessWidget {
                                   contentPadding: EdgeInsets.all(8),
                                 ),
                                 onChanged: (value) => context
-                                    .read<LoginCubit>()
+                                    .read<SignupCubit>()
                                     .passwordChanged(value),
                                 validator: (value) => value.length < 6
                                     ? 'Must be at least 6 characters.'
@@ -144,9 +168,9 @@ class LoginScreen extends StatelessWidget {
                                 textColor: Colors.white,
                                 color: Colors.blue,
                                 onPressed: () => _submitForm(context,
-                                    state.status == LoginStatus.submitting),
+                                    state.status == SignupStatus.submitting),
                                 child: Text(
-                                  "Log In",
+                                  "Sign Up",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15.0),
                                 ),
@@ -158,7 +182,7 @@ class LoginScreen extends StatelessWidget {
                                   Text('Forgot your login details? ',
                                       style: TextStyle(color: Colors.black54)),
                                   Text(
-                                    'Get help logging in.',
+                                    'Get help signing up.',
                                     style: TextStyle(
                                         color: Colors.black54,
                                         fontWeight: FontWeight.bold),
@@ -225,20 +249,18 @@ class LoginScreen extends StatelessWidget {
                           color: Colors.white24,
                           height: 0.5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(SignupScreen.routeName);
-                            },
+                        InkWell(
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(LoginScreen.routeName),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Don't have an account? ",
+                                Text("Already have an account? ",
                                     style: TextStyle(color: Colors.black54)),
                                 Text(
-                                  'Sign up.',
+                                  'Sign In',
                                   style: TextStyle(
                                       color: Colors.white54,
                                       fontWeight: FontWeight.bold),
@@ -261,7 +283,7 @@ class LoginScreen extends StatelessWidget {
 
   void _submitForm(BuildContext context, bool isSubmitting) {
     if (_formKey.currentState.validate() && !isSubmitting) {
-      context.read<LoginCubit>().loginWithCredential();
+      context.read<SignupCubit>().signUpWithCredentials();
     }
   }
 }

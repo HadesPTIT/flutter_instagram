@@ -64,6 +64,7 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/images_sample.jpg');
   AssetGenImage get imagesSample2 =>
       const AssetGenImage('assets/images/images_sample_2.jpg');
+  String get imgStateView => 'assets/images/img_state_view.svg';
   String get logoInsta => 'assets/images/logo_insta.svg';
 }
 
