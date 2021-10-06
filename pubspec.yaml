@@ -47,7 +47,7 @@ dependencies:
   cloud_firestore: ^0.14.4
   firebase_analytics: ^6.3.0
   firebase_auth: ^0.18.4+1
-  firebase_core: ^0.5.3
+  firebase_core: ^0.7.0
   firebase_storage: ^5.2.0
 
   enum_to_string: ^1.0.14
