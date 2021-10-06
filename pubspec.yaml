@@ -44,7 +44,7 @@ dependencies:
   bloc: ^6.1.1
 
   # Firebase
-  cloud_firestore: ^0.14.4
+  cloud_firestore: ^0.16.0
   firebase_analytics: ^6.3.0
   firebase_auth: ^0.18.4+1
   firebase_core: ^0.5.3
