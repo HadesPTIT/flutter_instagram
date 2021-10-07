@@ -54,7 +54,7 @@ dependencies:
   meta: ^1.2.4
 
   liquid_pull_to_refresh: ^2.0.0
-  cached_network_image: ^2.0.0-rc.1
+  cached_network_image: ^3.0.0
 
   video_player: ^1.0.1
 
