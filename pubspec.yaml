@@ -82,7 +82,7 @@ dev_dependencies:
     sdk: flutter
 
   hive_generator: ^0.8.2
-  build_runner: ^1.8.0
+  build_runner: ^2.0.0
 
 flutter_gen:
   output: lib/gen_assets/
