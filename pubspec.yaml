@@ -41,7 +41,7 @@ dependencies:
   # flutter Widgets that make it easy to implement the BLoC
   flutter_bloc: ^6.1.1
   # state management library that helps implement the BLoC
-  bloc: ^6.1.1
+  bloc: ^8.0.0
 
   # Firebase
   cloud_firestore: ^0.14.4
