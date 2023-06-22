@@ -50,7 +50,7 @@ dependencies:
   firebase_core: ^0.5.3
   firebase_storage: ^5.2.0
 
-  enum_to_string: ^1.0.14
+  enum_to_string: ^2.0.0
   meta: ^1.2.4
 
   liquid_pull_to_refresh: ^2.0.0
