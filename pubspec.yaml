@@ -28,7 +28,7 @@ dependencies:
   get: ^3.24.0
 
   google_fonts: ^1.1.2
-  flutter_svg: 0.18.0
+  flutter_svg: 0.23.0+1
 
   # Hive database with path provider
   hive: ^1.4.4
