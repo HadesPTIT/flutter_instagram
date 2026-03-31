@@ -36,7 +36,7 @@ dependencies:
   path_provider: ^1.6.11
   path: ^1.6.4
 
-  equatable: ^1.2.5
+  equatable: ^2.0.0
 
   # flutter Widgets that make it easy to implement the BLoC
   flutter_bloc: ^6.1.1
